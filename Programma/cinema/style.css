@@ -1,0 +1,183 @@
+body {
+    background-color: #7c4dffc4;
+}
+
+.blacks{
+    background-color: #212529;
+}
+
+.header{
+    position: sticky;
+    top: 0;
+    z-index: 99;
+}
+
+footer{
+    bottom:0; 
+    left:0; 
+    right: 0;
+    max-height: 400px;
+}
+
+.text-center .p-3{
+    margin: 0 auto;
+    margin-top: -10rem;
+}
+
+iframe{
+    display:block;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.info{
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+
+.col{
+    margin-bottom: 30px;
+}
+
+.col img{
+    height: 450px;
+    object-fit: cover;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+    position: relative;
+    width: 100%;
+}
+
+.colimg{
+    position: relative;
+    text-align: center;
+}
+
+.kor{
+    height: 450px;
+    width: 93%;
+    position: absolute;
+    top: 60px;
+    opacity: 0;
+}
+
+.tekst h5{
+    width: 100%;
+    margin-top: 10px;
+    text-align: center;
+    color: black;
+    position: absolute;
+}
+
+.kor:hover{
+    opacity: 1;
+    top: 0;
+}
+
+.kor::before{
+    color: black;
+    height: 100%;
+    width: 100%;
+    content: '';
+    position: absolute;
+    top:0;
+    left:0;
+    background: rgba(255,255,255,.8);
+    clip-path: circle(0% at 50% 0);
+    transition: .3s linear;
+}
+
+.kor:hover::before{
+    clip-path: circle(100%);
+}
+
+.container{
+    margin-bottom: 200px;
+}
+
+.check-label {
+    display: block;
+}
+
+.slider{
+    margin-top: 20px;
+    margin-bottom: -150px;
+}
+
+.content{
+    margin-bottom: -190px;
+}
+
+.table{
+    margin-bottom: 423px;
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+table td {
+width: 100%;
+}
+
+table {
+    border-collapse: collapse;
+    text-align: left;
+}
+  
+td p {
+margin: 0;
+height: 1em;
+padding: 0.5em;
+}
+
+.buttons{
+    width: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.vh-100{
+    margin-top: -150px;
+    margin-bottom: -100px;
+}
+
+.list-group{
+    margin-left: 50px;
+    width: 15%;
+    height: 100%;
+    margin-bottom: 25px;
+}
+
+
+.filmlist{
+    margin-top: 50px;
+    margin-bottom: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filmlist img{
+    height: 400px;
+    object-fit: cover;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+    position: relative;
+    width: 100%;
+}
+
+.btn-success{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 140px;
+}
+
+.py-5{
+    margin-bottom: 350px;
+}
+
+.font-weight-bold{
+    font-weight: bold;
+}
