@@ -107,21 +107,18 @@ function getHeader($isblack, $number)
 function getFilmSaraksts()
 {
   require("connection.php");
-  $roomsSQL = "SELECT * FROM filmu_list";
+  $roomsSQL = "SELECT * FROM saraksts";
   $read_rooms = mysqli_query($connection, $roomsSQL) or die("Nekorekts vaicājums");
 
   if (mysqli_num_rows($read_rooms) > 0) {
     while ($row = mysqli_fetch_assoc($read_rooms)) {
       echo "
                     <ul class='list-group'>
-                    <li class='list-group-item'><img src='{$row["saite"]}' alt='film'></li>
+                    <li class='list-group-item'><a href='filmpage.php?id={$row["id_films"]}'><img src='{$row["saite"]}' alt='film'></a></li>
                     <li class='list-group-item'>Nosaukums: {$row["nosaukums"]}</li>
                     <li class='list-group-item'>Žanrs: {$row["zanrs"]}</li>
-                    <li class='list-group-item'>Datums: {$row["datums"]}</li>
-                    <li class='list-group-item'>Laiks: {$row["laiks"]}</li>
                     <li class='list-group-item'>Cena: {$row["cena"]}</li>
                     <li class='list-group-item'>
-                    <button type='button' class='btn btn-success'>Rezervēt</button>
                     </li>
                     </ul>
                 ";
@@ -256,4 +253,39 @@ function userlist()
     echo "Tabula nav datu ko attēlot";
   }
 }
-  ?>
+
+function getFooter()
+{
+?>
+<footer class="text-center text-lg-start text-white" style="background-color: #1c2331">
+
+<section class="d-flex justify-content-between p-4" style="background-color: #7c4dffc4">
+</section>
+
+<section class="">
+  <div class="container text-center text-md-start mt-5">
+    <div class="row mt-3">
+      <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+        <h6 class="text-uppercase fw-bold">GRONEMA</h6>
+        <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+        <p>
+          Mūsu uzņēmums tika dibināts 2022. gadā un jau tagad ir viens no labākajiem kinoteātriem.
+        </p>
+      </div>
+
+      <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+        <h6 class="text-uppercase fw-bold">kontaktinformācija</h6>
+        <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+        <p><i class="fas fa-home mr-3"></i> nikitogka@gmail.com</p>
+        <p><i class="fas fa-envelope mr-3"></i> +371 25373811</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">©2022 Copyright:
+  <a class="text-white">Nikita Groshev</a>
+</div>
+</footer>
+<?php
+}
+?>

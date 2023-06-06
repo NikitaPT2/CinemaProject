@@ -1,13 +1,14 @@
 use cinema;
 
 CREATE VIEW filmu_list AS
-SELECT fl.zanrs,pi.nosaukums,pi.datums,pi.laiks,pi.cena,mdf.saite,fl.id_films
+SELECT fl.zanrs,pi.nosaukums,pi.cena,mdf.saite,fl.id_films,sns.datums,sns.laiks
 FROM films AS fl
 INNER JOIN papildu_info AS pi 
 ON fl.papildu_info_idpapildu_info=pi.idpapildu_info
 INNER JOIN media AS mdf
 ON fl.media_id_media=mdf.id_media AND mdf.media_tips='foto'
-WHERE pi.datums > CURRENT_TIMESTAMP();
+LEFT JOIN seansi AS sns
+ON sns.films_id_films = fl.id_films;
 
 CREATE VIEW biletes AS
 SELECT lg.username, bl.zale_numurs, vt.vieta, vt.rinda, pi.nosaukums, pi.datums, rz.reservets, pi.laiks
@@ -58,22 +59,40 @@ CREATE PROCEDURE createFilm(
   IN p_date DATE,
   IN p_time VARCHAR(255),
   IN p_price DECIMAL(10, 2),
-  IN p_imageUrl VARCHAR(255)
+  IN p_imageUrl VARCHAR(255),
+  IN p_valoda VARCHAR(255)
 )
 BEGIN
-    INSERT INTO media (saite, media_tips)
-    VALUES (p_imageUrl, 'foto');
+    IF EXISTS (SELECT id_films FROM films AS fl INNER JOIN papildu_info AS pi ON pi.idpapildu_info = fl.papildu_info_idpapildu_info WHERE pi.nosaukums = p_filmName) THEN
+      -- Если фильм существует
+      INSERT INTO seansi (datums, laiks, valoda, films_id_films)
+      SELECT p_date, p_time, p_valoda, id_films
+      FROM films AS fl
+      INNER JOIN papildu_info AS pi ON pi.idpapildu_info = fl.papildu_info_idpapildu_info
+      WHERE pi.nosaukums = p_filmName
+      LIMIT 1;
+    ELSE
+      -- Если фильм не существует
+      INSERT INTO media (saite, media_tips)
+      VALUES (p_imageUrl, 'foto');
 
-    SET @media_id = LAST_INSERT_ID();
+      SET @media_id = LAST_INSERT_ID();
 
-    INSERT INTO papildu_info (datums, nosaukums, cena, laiks)
-    VALUES (p_date, p_filmName, p_price, p_time);
+      INSERT INTO papildu_info (nosaukums, cena)
+      VALUES (p_filmName, p_price);
 
-    SET @papildu_id = LAST_INSERT_ID();
+      SET @papildu_id = LAST_INSERT_ID();
 
-    INSERT INTO films (zanrs, vecums, media_id_media, papildu_info_idpapildu_info)
-    VALUES (p_filmGenre, p_filmDescription, @media_id, @papildu_id);
+      INSERT INTO films (zanrs, vecums, media_id_media, papildu_info_idpapildu_info)
+      VALUES (p_filmGenre, p_filmDescription, @media_id, @papildu_id);
 
+      INSERT INTO seansi (datums, laiks, valoda, films_id_films)
+      SELECT p_date, p_time, p_valoda, id_films
+      FROM films AS fl
+      INNER JOIN papildu_info AS pi ON pi.idpapildu_info = fl.papildu_info_idpapildu_info
+      WHERE pi.nosaukums = p_filmName
+      LIMIT 1;
+    END IF;
 END$$
 DELIMITER ;
 
@@ -87,3 +106,11 @@ BEGIN
     VALUES (p_userName, p_userPass, 0);
 END$$
 DELIMITER ;
+
+CREATE VIEW saraksts AS
+SELECT fl.zanrs,pi.nosaukums,pi.cena,mdf.saite,fl.id_films
+FROM films AS fl
+INNER JOIN papildu_info AS pi 
+ON fl.papildu_info_idpapildu_info=pi.idpapildu_info
+INNER JOIN media AS mdf
+ON fl.media_id_media=mdf.id_media AND mdf.media_tips='foto';
