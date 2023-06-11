@@ -25,6 +25,7 @@
                 if ($count == 1 && password_verify($password, $hashedPassword)) {
                   $_SESSION['username'] = $username;
                   $_SESSION['admin'] = $row['admin'];
+                  $_SESSION['userID'] = $row['id_login'];
                 } else {
                   $msg = 'Kļuda!';
                 }

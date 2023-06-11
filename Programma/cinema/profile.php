@@ -40,7 +40,7 @@ getHeader(true, 5);
           </div>
           <div class="row">
             <h4 style="color:white;">Rezervācijas tabula</h4>
-            <div class="col-md-12">
+            <div class="col-md-12" style="color:black;">
               <div class="card mb-4 mb-md-0">
                 <table>
                   <thead>
@@ -57,7 +57,6 @@ getHeader(true, 5);
                       <th scope="col">Laiks</th>
                       <th scope="col">Vieta</th>
                       <th scope="col">Rinda</th>
-                      <th scope="col">Zale numurs</th>
                       <th scope="col">Rezervēts</th>
 
                       </th>
@@ -75,46 +74,46 @@ getHeader(true, 5);
 
             <?php
             if ($_SESSION['admin'] == 1) {
-            ?>
-            <h4 style="color:white;">Lietotāju saraksts</h4>
-            <div class="col-md-12">
-              <div class="card mb-4 mb-md-0">
-                <table>
-                  <thead>
-                    <tr>
+              ?>
+              <h4 style="color:white;">Lietotāju saraksts</h4>
+              <div class="col-md-12" style="color:black;">
+                <div class="card mb-4 mb-md-0">
+                  <table>
+                    <thead>
+                      <tr>
 
-                      <th scope="col">#</th>
+                        <th scope="col">#</th>
 
-                      <th scope="col">Login</th>
-                      <th scope="col">Rezervēšanas skaits (count)</th>
-                      <th scope="col">Admin status</th>
+                        <th scope="col">Login</th>
+                        <th scope="col">Rezervēšanas skaits (count)</th>
+                        <th scope="col">Admin status</th>
 
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php
-              userlist();
-              if (isset($_GET["changeStatus"])) {
-                $userID = $_GET["changeStatus"];
-                require('connection.php');
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php
+                      userlist();
+                      if (isset($_GET["changeStatus"])) {
+                        $userID = $_GET["changeStatus"];
+                        require('connection.php');
 
-                $query = "CALL changeRights(" . $userID . ");";
+                        $query = "CALL changeRights(" . $userID . ");";
 
-                $result = mysqli_query($connection, $query) or die(mysqli_error($connection));
+                        $result = mysqli_query($connection, $query) or die(mysqli_error($connection));
 
-                if ($result == 1) { ?>
-                    <script> window.location = window.location.pathname </script>
-                    <?php
-                }
-              }
-                    ?>
-                  </tbody>
-                </table>
+                        if ($result == 1) { ?>
+                          <script> window.location = window.location.pathname </script>
+                          <?php
+                        }
+                      }
+                      ?>
+                    </tbody>
+                  </table>
 
+                </div>
               </div>
-            </div>
-            <?php
+              <?php
             }
             ?>
 
@@ -123,9 +122,62 @@ getHeader(true, 5);
       </div>
     </div>
   </section>
+ <?php
+  if (isset($_GET["pirkt"])) {
+        $pirktID = $_GET["pirkt"];
+        require('connection.php');
 
+        $query = "CALL pirktBilete(" . $pirktID . ");";
+
+        $result = mysqli_query($connection, $query) or die(mysqli_error($connection));
+
+        if ($result == 1) { ?>
+          <script> window.location = window.location.pathname </script>
+          <?php
+        }
+      }
+?>
 
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.2.js" integrity="sha256-pkn2CUZmheSeyssYw3vMp1+xyub4m+e+QK4sQskvuo4="
+    crossorigin="anonymous"></script>
+
+<script>
+  $(document).ready(function () {
+    function hideButton(item) {
+      $(item).next().find('.pirktButton').hide();
+    }
+    setInterval(function () {
+      var reservedStatuses = $('.rez-status');
+      reservedStatuses.each(function () {
+        var item = $(this);
+        var time = item.find('.rez-pirksanu-laiks')
+        var statusID = item.find('.rez-status-id')
+        var text = item.find('.rez-result')
+
+        if (statusID.val() === '2') {
+          text.text('Nopirkts')
+          hideButton(item);
+        }else{
+          var currentTime = Math.floor(new Date().getTime() / 1000);
+          var targetTime = Math.floor(new Date(time.val()).getTime() / 1000)+ (30 * 60);
+          var timeDiff = targetTime - currentTime;
+          if (timeDiff>0){
+            var minutes = Math.floor(timeDiff / 60);
+            var seconds = timeDiff % 60;
+            var timer = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+            text.text('Pirkšanas laiks ' + timer);
+          }else{
+            hideButton(item);
+            text.text('Atcelts');
+          }
+          console.log(timeDiff);
+        }
+      })
+    }, 1000);
+  });
+</script>
 
 <?php
 getFooter();

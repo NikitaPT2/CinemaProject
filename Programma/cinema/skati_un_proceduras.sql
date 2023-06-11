@@ -1,42 +1,27 @@
 use cinema;
 
 CREATE VIEW filmu_list AS
-SELECT fl.zanrs,pi.nosaukums,pi.cena,mdf.saite,fl.id_films,sns.datums,sns.laiks
+SELECT fl.zanrs,pi.nosaukums,pi.cena,mdf.saite,fl.id_films,sns.datums,sns.laiks,sns.id_seansi
 FROM films AS fl
 INNER JOIN papildu_info AS pi 
 ON fl.papildu_info_idpapildu_info=pi.idpapildu_info
 INNER JOIN media AS mdf
 ON fl.media_id_media=mdf.id_media AND mdf.media_tips='foto'
 LEFT JOIN seansi AS sns
-ON sns.films_id_films = fl.id_films;
-
-CREATE VIEW biletes AS
-SELECT lg.username, bl.zale_numurs, vt.vieta, vt.rinda, pi.nosaukums, pi.datums, rz.reservets, pi.laiks
-FROM login AS lg
-INNER JOIN bilete AS bl
-ON lg.id_login=bl.id_bilete
-INNER JOIN vietas as vt
-ON bl.id_bilete=vt.id_vieta
-INNER JOIN films AS fl
-ON bl.id_bilete=fl.id_films
-INNER JOIN papildu_info AS pi
-ON fl.id_films=pi.idpapildu_info
-INNER JOIN rezervacija AS rz
-ON lg.id_login=rz.id_login;
+ON sns.films_id_films = fl.id_films
+WHERE sns.id_seansi IS NULL OR sns.active=1;
 
 CREATE VIEW userlist AS
 SELECT lg.username, COUNT(*) as count, lg.admin, lg.id_login
 FROM login AS lg
-INNER JOIN rezervacija AS rz
-ON lg.id_login=rz.id_login
 GROUP BY lg.username, lg.admin, lg.id_login;
 
 DELIMITER $$
-CREATE PROCEDURE deleteFilm(IN film_id INTEGER)
+CREATE PROCEDURE deleteFilm(IN seansi_id INTEGER)
 BEGIN
 
-    DELETE FROM bilete WHERE films_id_films=film_id;
-    DELETE FROM films WHERE id_films=film_id;
+UPDATE seansi SET active=0
+WHERE id_seansi=seansi_id;
     
 END $$
 DELIMITER ;
@@ -108,9 +93,46 @@ END$$
 DELIMITER ;
 
 CREATE VIEW saraksts AS
-SELECT fl.zanrs,pi.nosaukums,pi.cena,mdf.saite,fl.id_films
+SELECT fl.zanrs,pi.nosaukums,pi.cena,mdf.saite,fl.id_films,fl.end_date
 FROM films AS fl
 INNER JOIN papildu_info AS pi 
 ON fl.papildu_info_idpapildu_info=pi.idpapildu_info
 INNER JOIN media AS mdf
-ON fl.media_id_media=mdf.id_media AND mdf.media_tips='foto';
+ON fl.media_id_media=mdf.id_media AND mdf.media_tips='foto'
+WHERE fl.end_date > NOW() OR fl.end_date IS NULL;
+
+DELIMITER $$
+CREATE PROCEDURE nopirktBilete(
+  IN rowID INT,
+  IN colID INT,
+  IN seansID INT,
+  IN userID INT
+)
+BEGIN
+    INSERT INTO bilete (vieta, rinda, login_id_login,seansi_id_seansi,bilete_statuss_id_bilete_statuss, pirksanu_laiks)
+    VALUES (colID,rowID,userID,seansID,1,NOW());
+END$$
+DELIMITER ;
+
+CREATE VIEW biletes AS
+SELECT pi.nosaukums,sns.datums,sns.laiks,blt.vieta,blt.rinda,blt.pirksanu_laiks,blt.bilete_statuss_id_bilete_statuss,lg.username,blt.id_bilete
+FROM bilete AS blt
+INNER JOIN login AS lg
+ON lg.id_login=blt.login_id_login
+INNER JOIN seansi AS sns
+ON sns.id_seansi=blt.seansi_id_seansi
+INNER JOIN films AS flm
+ON flm.id_films=sns.films_id_films
+INNER JOIN papildu_info AS pi
+ON flm.papildu_info_idpapildu_info=pi.idpapildu_info
+ORDER BY blt.pirksanu_laiks
+
+DELIMITER $$
+CREATE PROCEDURE pirktBilete(
+  IN p_bileteID INT
+)
+BEGIN
+    UPDATE bilete SET bilete_statuss_id_bilete_statuss = 2
+    WHERE id_bilete=p_bileteID;
+END$$
+DELIMITER ;

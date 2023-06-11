@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
 body {
-    background-color: #7c4dffc4;
+    background-color: #212529;
+    color: white;
 }
 
 .blacks{
@@ -180,4 +183,147 @@ padding: 0.5em;
 
 .font-weight-bold{
     font-weight: bold;
+}
+
+/* * {
+    box-sizing: border-box;
+}
+
+* {
+    user-select: none;
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: -moz-none;
+    -webkit-user-select: none;
+} */
+
+/* ::selection {
+    background: transparent;
+    color: inherit;
+}
+::-moz-selection {
+    background: transparent;
+    color: inherit;
+} */
+
+/* body {
+    font-family: 'Lato', 'sans-serif';
+    background-color: #242333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: #fff;
+    margin: 0;
+} */
+
+.rezervet-modal .modal-content{
+    background: #777;
+}
+
+.rezervet-film .movie-container label {
+    margin-right: 10px;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.rezervet-film .movie-container select {
+    padding: 5px;
+    border-radius: 4px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    font-size: 14px;
+}
+
+.rezervet-film .showcase {
+    border-radius: 7px;
+    display: flex;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+    list-style: none;
+    font-weight: 500;
+    margin: 20px 0;
+    color: #fefcfc;
+}
+
+.rezervet-film .showcase li {
+    margin: 0 10px;
+}
+
+.rezervet-film .showcase li small {
+    margin-left: 3px;
+}
+
+.rezervet-film .seat {
+    height: 50px;
+    width: 50px;
+    background-color: #d04343c4;
+    display: inline-block;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border: 1px solid black;
+    margin: 3px;
+}
+
+.rezervet-film .seat.selected {
+    background-color: rgb(115, 115, 253);
+}
+
+.rezervet-film .seat.occupied {
+    background-color: #fff;
+}
+
+.rezervet-film .seat.rezerved {
+    background-color: #76c3f2;
+}
+
+.rezervet-film .container {
+    width: 700px;
+    perspective: 1000px;
+}
+
+.rezervet-film .container .screen {
+    width: 100%;
+    height: 90px;
+    background-color: #fff;
+    transform: rotateX(-45deg);
+    -webkit-box-shadow: 0px 0px 7px 0px rgba(255, 255, 255, 1);
+    -moz-box-shadow: 0px 0px 7px 0px rgba(255, 255, 255, 1);
+    box-shadow: 0px 0px 7px 0px rgba(255, 255, 255, 1);
+    margin: 10px 0;
+}
+
+.rezervet-film .row .seat:nth-of-type(2) {
+    margin-right: 10px;
+}
+
+.rezervet-film .row .seat:nth-last-of-type(2) {
+    margin-left: 10px;
+}
+
+.rezervet-film .container .seat {
+    margin-left: 2px;
+}
+
+.rezervet-film .container .seat:not(.occupied,.rezerved):hover {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.rezervet-film .text span {
+    color: rgb(236, 150, 150);
+}
+
+.rezervet-film .text {
+    color: rgb(255, 255, 255);
+}
+
+.rezervet-film .seats{
+    padding: 0 60px;
+}
+
+.rezervet-film .container{
+    margin-bottom: 0;
 }
