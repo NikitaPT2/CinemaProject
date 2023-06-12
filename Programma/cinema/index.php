@@ -24,13 +24,13 @@
                 <img src="foto/cinema.jpg" class="d-block w-100" alt="..." width="960" height="540">
               </div>
               <div class="carousel-item">
-                <iframe width="960" height="540" src="https://www.youtube.com/embed/o5F8MOz_IDw"
+                <iframe width="960" height="540" src="https://www.youtube.com/embed/bYOxxVwwFt4"
                   title="YouTube video player" frameborder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen></iframe>
               </div>
               <div class="carousel-item">
-                <iframe width="960" height="540" src="https://www.youtube.com/embed/08QSsgQYQrI"
+                <iframe width="960" height="540" src="https://www.youtube.com/embed/b4Gjf_uvPQk"
                   title="YouTube video player" frameborder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen></iframe>
