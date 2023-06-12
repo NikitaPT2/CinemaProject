@@ -2,7 +2,7 @@
     $servername = "localhost:3306"; // Adrese un ports, uz kuru pieslēdzas datubāzes serveris
     $username = "root"; // Lietotājvārds datubāzes pieslēgšanai
     $password = ""; // Parole datubāzes pieslēgšanai
-    $dbname = "cinema2"; // Nosaukums datubāzei, kurai piekļūs
+    $dbname = "cinema"; // Nosaukums datubāzei, kurai piekļūs
     $connection = mysqli_connect($servername, $username, $password, $dbname); // Pieslēgšanās datubāzei
 
     if(!$connection){

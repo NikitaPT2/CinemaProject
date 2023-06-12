@@ -22,7 +22,7 @@ INNER JOIN films AS flm
 ON flm.id_films=sns.films_id_films
 INNER JOIN papildu_info AS pi
 ON flm.papildu_info_idpapildu_info=pi.idpapildu_info
-ORDER BY blt.pirksanu_laiks
+ORDER BY blt.pirksanu_laiks;
 
 CREATE VIEW userlist AS
 SELECT lg.username, COUNT(*) as count, lg.admin, lg.id_login
