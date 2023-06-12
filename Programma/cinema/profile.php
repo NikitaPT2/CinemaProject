@@ -12,7 +12,7 @@ getHeader(true, 5);
           <div class="card mb-4">
             <div class="card-body text-center">
               <img src="foto/man.jpg" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
-              <h5 class="my-3">
+              <h5 class="my-3" style="color:black;">
                 <?php
                 echo $_SESSION['username'];
                 ?>
@@ -22,22 +22,6 @@ getHeader(true, 5);
 
         </div>
         <div class="col-lg-8">
-          <div class="card mb-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">Login</p>
-                </div>
-                <div class="col-sm-9">
-                  <p class="text-muted mb-0">
-                    <?php
-                    echo $_SESSION['username'];
-                    ?>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
           <div class="row">
             <h4 style="color:white;">Rezervācijas tabula</h4>
             <div class="col-md-12" style="color:black;">
@@ -49,7 +33,7 @@ getHeader(true, 5);
                       <th scope="col">#</th>
                       <?php
                       if ($_SESSION['admin'] == 1) {
-                        echo '<th scope="col">Login</th>';
+                        echo '<th scope="col">E-pasts</th>';
                       }
                       ?>
                       <th scope="col">Filma nosaukums</th>

@@ -5,7 +5,8 @@ getHeader(false, 2);
 ?>
 
 <div class="content">
-  <div class="filmlist">
+  <div class="filmlist"
+    style="background-color: #333; width:1600px; margin: 20px auto; padding: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin-bottom: 20px;">
     <?php
     $id = $_GET['id'];
     $roomsSQL = "SELECT * FROM films flm INNER JOIN papildu_info pi ON flm.papildu_info_idpapildu_info = pi.idpapildu_info INNER JOIN media md ON md.id_media = flm.media_id_media WHERE id_films = '{$id}'";
@@ -13,11 +14,12 @@ getHeader(false, 2);
     if (mysqli_num_rows($read_rooms) > 0) {
       while ($row = mysqli_fetch_assoc($read_rooms)) {
         echo "
-          <div class='container text-center' style='padding-left: 10rem; margin: 0 auto;'>
+          <div class='container text-center' style='margin: 0 auto;'>
           <div class='row' style='display: flex; justify-content: center; align-items: center;'>
           <div class='col-md-12' style='color:white;'> <h1>{$row["nosaukums"]}</h1> <input type='hidden' class='film-id' value='{$row["id_films"]}'></div>
           <div class='col-md-12' style='min-height:100px; min-width:300px; width: auto;'> <img src='{$row["saite"]}' alt=''> </div>
           <div class='col-md-12' style='color:white;'> <p>{$row["zanrs"]}</p> </div>
+          <p style='word-wrap: break-word; word-break: break-all;'>{$row["apraksts"]}</p>
           </div>
           </div>
           ";
@@ -28,7 +30,7 @@ getHeader(false, 2);
     ?>
     <div class="container">
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 align-self-end">
           <h1 style="color:white;"> Seansi </h1>
           <hr>
           <?php
@@ -48,24 +50,56 @@ getHeader(false, 2);
             }
             return $html;
           }
+
+          $monthsLatvian = array(
+            1 => 'janvāris',
+            2 => 'februāris',
+            3 => 'marts',
+            4 => 'aprīlis',
+            5 => 'maijs',
+            6 => 'jūnijs',
+            7 => 'jūlijs',
+            8 => 'augusts',
+            9 => 'septembris',
+            10 => 'oktobris',
+            11 => 'novembris',
+            12 => 'decembris'
+          );
+
           $id = $_GET['id'];
-          $roomsSQL = "SELECT * FROM films flm INNER JOIN seansi sns ON sns.films_id_films = flm.id_films WHERE id_films = '{$id}'";
+          $roomsSQL = "
+            SELECT * 
+            FROM films flm 
+            INNER JOIN seansi sns ON sns.films_id_films = flm.id_films 
+            WHERE id_films = '{$id}' AND (sns.datums >= CURDATE() OR sns.datums IS NULL)
+          ";
           $read_rooms = mysqli_query($connection, $roomsSQL) or die("Nekorekts vaicājums");
+
           if (mysqli_num_rows($read_rooms) > 0) {
             while ($row = mysqli_fetch_assoc($read_rooms)) {
               $valodasSection = getValoda($row["valoda"]);
+              $display = $row["active"];
+              $displayStr = $display ? '' : 'hidden';
+
+              $timestamp = strtotime($row['datums']);
+              $day = date('j', $timestamp);
+              $month = date('n', $timestamp);
+              $formattedDate = $day . '. ' . $monthsLatvian[$month];
+              $isLogin = isset($_SESSION['username']);
               echo "
-                <div class='container' style='color:white;'>
-                <div class='row'>
-                <div class='col-md-2'>{$row["datums"]}</div>
-                <div class='col-md-2'>{$row["laiks"]}</div>
-                <div class='col-md-2'>{$row["vecums"]}</div>
-                <div class='col-md-2'>{$valodasSection}</div>
-                <div class='col-md-1'> <button type='button' data-seanss='{$row["id_seansi"]}' class='btn btn-success btn-rezerv' data-bs-toggle='modal' data-bs-target='#exampleModal'>Rezervēt</button>
+                <div class='container' {$displayStr} style='color:white; margin-bottom: 10px;'>
+                    <div class='row' style='margin: 0;'>
+                        <div class='col-md-2'>{$formattedDate}</div>
+                        <div class='col-md-2'>{$row["laiks"]}</div>
+                        <div class='col-md-2'>{$row["vecums"]}</div>
+                        <div class='col-md-2'>{$valodasSection}</div>
+                        <div class='col-md-1'> 
+                          <button type='button' data-isLogin='$isLogin' data-seanss='{$row["id_seansi"]}' class='btn btn-danger btn-rezerv' data-bs-toggle='modal' data-bs-target='#exampleModal'>Rezervēt</button>
+                        </div>
+                    </div>
+                    <hr>
                 </div>
-                </div>
-                </div>
-                ";
+              ";
             }
           } else {
             echo "Tabula nav datu ko attēlot";
@@ -83,7 +117,7 @@ getHeader(false, 2);
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="exampleModalLabel">
-            Films
+            Vietas izvēle
           </h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
@@ -173,22 +207,31 @@ getHeader(false, 2);
                   <div class="seat" data-rinda="5" data-vieta="10"></div>
                 </div>
               </div>
-
-              <p class="text">You have selected <span id="seatsSelected">0</span> seats for the price of $<span
-                  id="totalPrice">0</span></p>
+              <div style="display: flex; justify-content: center; align-items: center;">
+                <p class="text">Jūs esat izvēlējies <span id="seatsSelected">0</span> vietu par €<span
+                    id="totalPrice">0</span></p>
+              </div>
+              <p class="text" style="margin-bottom:0;">Maksājuma saite Swedbank klientiem: <img src="https://cdn-icons-png.flaticon.com/256/4856/4856460.png" alt="Unicode Attēls" style="width:40px"></p>
+              <a style="color:white;" href="https://www.swedbank.lv/pay?id=71kf2rfl2tn2"
+                target="_blank">https://www.swedbank.lv/pay?id=71kf2rfl2tn2</a>
+              <p class="text">(detalizēta informācija par maksājumu atrodas sadaļā "Informacija")
+              </p>
             </div>
           </div>
           <div class="modal-footer">
+            Uzrakstiet atbildi uz piemēru:<span class="piemeru-list">2+2=</span>
+            <input type="text" class="answer" data-answer="4">
             <form id="sendRezerv" method="POST" name="sendRezerv">
               <input type="hidden" name="seansid" class="seansid">
               <input type="hidden" name="vietas" class="vietas-hdn">
-              <input type="submit" class="btn btn-primary" value="Nopirkt">
+              <input type="submit" class="btn btn-danger nopirkt" value="Nopirkt" style="display:none;">
             </form>
           </div>
         </div>
       </div>
     </div>
   </div>
+
   <?php
   if (isset($_POST["seansid"])) {
     require('connection.php');
@@ -199,7 +242,7 @@ getHeader(false, 2);
     foreach ($array['vietas'] as $item) {
       $row = $item['row'];
       $col = $item['col'];
-      echo "row: $row, col: $col" . PHP_EOL;
+      // echo "row: $row, col: $col" . PHP_EOL;
       $query = "CALL nopirktBilete(" . $row . "," . $col . ", " . $seansID . ", " . $_SESSION['userID'] . ");";
       $read_rooms = mysqli_query($connection, $query) or die("Nekorekts vaicājums");
     }
@@ -253,12 +296,22 @@ getHeader(false, 2);
         seats.removeClass('rezerved');
       }
 
+      $('.answer').on('change', function () {
+        var answer = $(this).data('answer')
+        if ($(this).val() == answer) {
+          $('.nopirkt').show()
+        }
+      })
       container.on('click', '.seat:not(.occupied)', function (e) {
         e.preventDefault();
         selectSeat(e.target);
         updateHidden();
       });
       $(".btn-rezerv").click(function () {
+        var isLogin = $(this).data('islogin');
+        if (isLogin !== 1) {
+          window.location.replace("/cinema/login.php");
+        }
         clearStatuses();
         var seansID = $(this).data('seanss');
         $('.seansid').val(seansID);

@@ -34,7 +34,7 @@
               if (!isset($_SESSION['username'])) {
               ?>
 
-            <h3 class="mb-5">Sign in</h3>
+            <h3 class="mb-5" style="color:black;">Ielogoties</h3>
 
             <form method="post">
               <div class="form-outline mb-4">
@@ -49,7 +49,7 @@
                 <label class="form-label" for="typePasswordX-2">Parole</label>
               </div>
 
-              <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+              <button class="btn btn-danger btn-lg btn-block" type="submit">Ielogoties</button>
             </form>
 
             <?php
@@ -67,7 +67,7 @@
 
                 echo "<h3><br><a href='logout.php'>Iziet</a></h3>";
               }else{
-                echo '<h4><a href="register.php">Register</a></h4>';
+                echo '<h4><a href="register.php">Reģistreties</a></h4>';
               }
               mysqli_close($connection);
               ?>

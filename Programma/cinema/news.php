@@ -1,73 +1,84 @@
 <?php
 require('components.php');
 require('connection.php');
-getHeader(false, 2);
-
-// Function to translate text using Yandex.Translate API
-function translateText($text, $targetLanguage) {
-  // Replace with your own Yandex.Translate API key
-  $apiKey = 'your-api-key';
-
-  $url = 'https://translate.yandex.net/api/v1.5/tr.json/translate';
-  $params = [
-    'key' => $apiKey,
-    'text' => $text,
-    'lang' => $targetLanguage,
-  ];
-
-  $query = http_build_query($params);
-  $requestUrl = $url . '?' . $query;
-
-  // Send the API request
-  $response = file_get_contents($requestUrl);
-
-  if ($response) {
-    $translation = json_decode($response, true);
-
-    if ($translation && isset($translation['text'][0])) {
-      return $translation['text'][0];
-    }
-  }
-
-  return $text; // Return the original text if translation fails
-}
-
-// Parse the RSS feed
-$rss = simplexml_load_file('https://www.comingsoon.net/feed');
-
-// Check if the feed was loaded successfully
-if ($rss) {
-  // Iterate over each item in the feed
-  foreach ($rss->channel->item as $item) {
-    $title = $item->title; // Get the title
-    $link = $item->link; // Get the link
-    $description = $item->description; // Get the description
-    $pubDate = $item->pubDate; // Get the publication date
-    $categories = $item->category; // Get the categories
-
-    // Translate the description to Latvian
-    $translatedDescription = translateText($description, 'lv');
-
-    // Output the news item
-    echo '<h2><a href="' . $link . '">' . $title . '</a></h2>';
-    echo '<p>' . $translatedDescription . '</p>';
-    echo '<p>Publication Date: ' . $pubDate . '</p>';
-
-    // Output the categories
-    echo '<p>Categories:</p>';
-    echo '<ul>';
-    foreach ($categories as $category) {
-      echo '<li>' . $category . '</li>';
-    }
-    echo '</ul>';
-
-    echo '<hr>';
-  }
-} else {
-  echo 'Failed to load RSS feed.';
-}
-
-getFooter();
+getHeader(false, 7);
 ?>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #212529;
+      color: #fff;
+    }
+
+    .news-title {
+      font-size: 22px;
+      margin-bottom: 5px;
+      color: #fff;
+    }
+
+    .news-date {
+      font-size: 14px;
+      color: #ccc;
+      margin-bottom: 10px;
+    }
+
+    .news-description {
+      color: #ccc;
+    }
+
+    hr {
+      border-color: #aaa;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container mt-5"
+    style="background-color: #333; color: #fff; text-align: center; padding: 20px; margin-top: 10px; margin-bottom: 10px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);">
+    <h2 class="news-title">Šī lapa vēl tiek izstrādāta</h2>
+    <p class="news-description">Nākotnē šeit tiks sniegta plašāka informācija un ziņas ar attēliem.</p>
+  </div>
+
+  <?php
+  // Izanalizēt RSS plūsmu.
+  $rss = simplexml_load_file('https://www.comingsoon.net/feed');
+
+  // Pārbaudīt, vai plūsma ir veiksmīgi ielādēta.
+  if ($rss) {
+    echo '<div class="container mt-5" style="background-color: #333; color: #fff; padding: 20px; margin-top: 30px; margin-bottom: 50px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);">';
+
+    // Iterēt cauri katram vienumam plūsmā.
+    foreach ($rss->channel->item as $item) {
+      $title = $item->title;
+      $link = $item->link;
+      $description = $item->description;
+      $pubDate = $item->pubDate;
+  
+      echo '<div class="mb-4">';
+      echo '<h2 class="news-title">' . $title . '</h2>';
+      echo '<p class="news-date">' . $pubDate . '</p>';
+      echo '<p class="news-description">' . $description . '</p>';
+      echo '</div>';
+      echo '<hr>';
+    }
+
+    echo '</div>';
+  } else {
+    echo 'Failed to load RSS feed.';
+  }
+  ?>
+
+  <?php
+  getFooter();
+  ?>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

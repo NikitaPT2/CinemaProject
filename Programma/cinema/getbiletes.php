@@ -1,6 +1,6 @@
 <?php
 require('connection.php');
-// Get the parameters sent by Ajax
+// Iegūt parametrus, kas nosūtīti ar Ajax
 $param1 = $_POST['param1'];
 
 $roomsSQL = "SELECT sns.id_seansi, blt.vieta, blt.rinda, blt.bilete_statuss_id_bilete_statuss FROM seansi AS sns
@@ -20,6 +20,6 @@ if (mysqli_num_rows($read_rooms) > 0) {
     }
 }
 
-// Return the result as a JSON object
+// Atgriez rezultātu kā JSON objektu.
 echo json_encode(array('result' => $results));
 ?>

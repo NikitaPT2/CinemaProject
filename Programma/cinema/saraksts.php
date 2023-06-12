@@ -4,7 +4,7 @@ getHeader(false, 2);
 ?>
 
 <div class="content">
-  <div class="filmlist">
+  <div class="filmlist mb-0">
     <?php
     getFilmSaraksts();
     ?>
