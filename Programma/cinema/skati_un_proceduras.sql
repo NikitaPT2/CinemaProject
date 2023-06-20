@@ -63,7 +63,6 @@ CREATE PROCEDURE createFilm(
 )
 BEGIN
     IF EXISTS (SELECT id_films FROM films AS fl INNER JOIN papildu_info AS pi ON pi.idpapildu_info = fl.papildu_info_idpapildu_info WHERE pi.nosaukums = p_filmName) THEN
-      -- Если фильм существует
       INSERT INTO seansi (datums, laiks, valoda, films_id_films)
       SELECT p_date, p_time, p_valoda, id_films
       FROM films AS fl
@@ -71,7 +70,6 @@ BEGIN
       WHERE pi.nosaukums = p_filmName
       LIMIT 1;
     ELSE
-      -- Если фильм не существует
       INSERT INTO media (saite, media_tips)
       VALUES (p_imageUrl, 'foto');
 

@@ -39,25 +39,24 @@ getHeader(true, 3);
                         <input list="options" name="film-name" class="form-control" id="film-name"
                           placeholder="Filmas nosaukums" type="text">
                         <datalist id="options">
-
                         </datalist>
                       </div>
                     </div>
 
                     <div class="form-group hide-block">
-                      <label for="film-name">Filmas žanrs:</label>
+                      <label for="film-genre">Filmas žanrs:</label>
                       <input type="text" class="form-control" id="film-genre" name="film-genre" required>
-                    </div>
-
-                    <div class="form-group hide-block">
-                      <label for="vecums">Vecums:</label>
-                      <input type="text" class="form-control" id="vecums" name="vecums">
                     </div>
 
                     <div class="form-group hide-block">
                       <label for="film-description">Filmas apraksts:</label>
                       <textarea class="form-control" id="film-description" name="film-description" rows="3"
                         required></textarea>
+                    </div>
+
+                    <div class="form-group hide-block">
+                      <label for="vecums">Vecums:</label>
+                      <input type="text" class="form-control" id="vecums" name="vecums">
                     </div>
 
                     <div class="form-group">
@@ -69,6 +68,7 @@ getHeader(true, 3);
                         </span>
                       </div>
                     </div>
+
                     <div class="form-group">
                       <label for="time">Laiks:</label>
                       <input type="text" class="form-control timepicker" name="time">
@@ -86,9 +86,10 @@ getHeader(true, 3);
                     </div>
 
                     <div class="form-group">
-                      <label for="image-url">Valoda:</label>
+                      <label for="valoda">Valoda:</label>
                       <input type="text" class="form-control" id="valoda" name="valoda" value="ENG; LV sub">
                     </div>
+
                   </form>
                 </div>
                 <div class="modal-footer">
@@ -124,14 +125,14 @@ getHeader(true, 3);
         $filmName = $_POST["film-name"];
         $filmGenre = $_POST["film-genre"];
         $filmDescription = $_POST["film-description"];
+        $vecums = $_POST["vecums"];
         $date = $_POST["date"];
         $time = $_POST["time"];
         $price = $_POST["film-price"];
         $imageUrl = $_POST["image-url"];
         $valoda = $_POST["valoda"];
-        $vecums = $_POST["vecums"];
 
-        $query = "CALL createFilm('" . $filmName . "', '" . $filmGenre . "', '" . $filmDescription . "', '" . $date . "', '" . $time . "', '" . $price . "', '" . $imageUrl . "','" . $valoda . "','" . $vecums . "');";
+        $query = "CALL createFilm('" . $filmName . "', '" . $filmGenre . "', '" . $filmDescription . "', '" . $vecums . "', '" . $date . "', '" . $time . "', '" . $price . "', '" . $imageUrl . "','" . $valoda . "');";
 
         $result = mysqli_query($connection, $query) or die(mysqli_error($connection));
 
